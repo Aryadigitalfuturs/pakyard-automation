@@ -1,0 +1,28 @@
+{
+  "appointments": [
+    {
+      "customer": "TES",
+      "time": "03:00",
+      "carrier": "UPS Express",
+      "receipt_id": "POS3K",
+      "order_type": "FTL",
+      "contact_name": "Arya",
+      "contact_number": "(345) 656-6667",
+      "email": "arya.ku@digitalfuturus.com"
+    }
+  ],
+  "checkin": {
+    "driver_name": "Remya",
+    "driver_cell": "469-742-3508",
+    "license_number": "420001201",
+    "license_state": "Texas",
+    "tractor_number": "3200013",
+    "trailer_type": "Tanker",
+    "trailer_number": "32000132",
+    "document_path": "C:\\Users\\Admin\\Python\\Test.png"
+  },
+  "inspection": {
+    "inspector_name": "Anupama",
+    "loader_name": "Arya"
+  }
+}
