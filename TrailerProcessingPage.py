@@ -110,3 +110,20 @@ class TrailerProcessingPage:
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", checkbox)
         time.sleep(1)
         self.driver.execute_script("arguments[0].click();", checkbox)
+
+    def click_mark_as_complete(self):
+        mark_complete_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"
+        mark_complete_button = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, mark_complete_xpath))
+        )
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", mark_complete_button)
+        time.sleep(1)
+        self.driver.execute_script("arguments[0].click();", mark_complete_button)
+        WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Success') or contains(text(), 'successfully')]")))
+
+    def click_trailer_processing_nav(self):
+        nav_xpath = "/html/body/div[2]/div[1]/div[2]/a[9]"
+        nav_button = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, nav_xpath))
+        )
+        nav_button.click()

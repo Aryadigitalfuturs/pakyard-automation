@@ -178,6 +178,13 @@ def execute_trailer_processing_page(driver):
     trailer_page.click_confirm_checkbox()
     time.sleep(2)
 
+    print("Clicking Mark as Complete button...")
+    trailer_page.click_mark_as_complete()
+
+    print("Navigating back to Trailer Processing list...")
+    trailer_page.click_trailer_processing_nav()
+    time.sleep(5)
+
 def test_pakyard_full_flow():
     driver = get_driver()
     try:
