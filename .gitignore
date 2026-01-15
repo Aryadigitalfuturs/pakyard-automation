@@ -1,0 +1,6 @@
+ChromeData/
+__pycache__/
+*.py[cod]
+*.png
+.vscode/
+Test_failed.png
