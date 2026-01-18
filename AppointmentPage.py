@@ -51,7 +51,7 @@ class AppointmentPage:
 
     def select_carrier(self, carrier_name):
         # Use the specific XPath provided for the carrier dropdown button
-        carrier_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[3]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[3]/button")
+        carrier_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[3]/button")
         wait = WebDriverWait(self.driver, 20)
         element = wait.until(EC.element_to_be_clickable(carrier_dropdown))
         self.driver.execute_script("arguments[0].click();", element)
@@ -97,14 +97,14 @@ class AppointmentPage:
         element.send_keys(email)
 
     def enter_receipt_id(self, receipt_id):
-        receipt_input = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[3]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[4]/input")
+        receipt_input = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[4]/input")
         element = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located(receipt_input))
         element.clear()
         element.send_keys(receipt_id)
 
     def select_order_type(self, order_type):
         # Use the specific XPath provided for the order type dropdown button
-        order_type_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[3]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[5]/button")
+        order_type_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[5]/button")
         wait = WebDriverWait(self.driver, 20)
         element = wait.until(EC.element_to_be_clickable(order_type_dropdown))
         self.driver.execute_script("arguments[0].click();", element)

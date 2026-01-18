@@ -47,7 +47,8 @@ class TrailerProcessingPage:
         start_button.click()
     
     def enter_inspector_name(self, inspector_name):
-        inspector_input = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.NAME, "nameOfInspector")))
+        inspector_input_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[1]/div[1]/input"
+        inspector_input = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.XPATH, inspector_input_xpath)))
         inspector_input.clear()
         inspector_input.send_keys(inspector_name)
 

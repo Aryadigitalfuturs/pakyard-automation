@@ -8,11 +8,13 @@ from AppointmentPage import AppointmentPage
 from LogoutPage import LogoutPage
 from CheckInPage import CheckInPage
 from TrailerProcessingPage import TrailerProcessingPage
+from CheckoutPage import CheckoutPage
 
 def get_driver():
     options = webdriver.ChromeOptions()
     # Use a user data directory to persist login session
     options.add_argument("user-data-dir=C:\\Users\\Admin\\Python\\PAKYARD\\ChromeData")
+    options.add_experimental_option("prefs", {"profile.default_content_setting_values.media_stream_camera": 1})
     driver = webdriver.Chrome(options=options)
     return driver
 
@@ -185,6 +187,13 @@ def execute_trailer_processing_page(driver):
     trailer_page.click_trailer_processing_nav()
     time.sleep(5)
 
+def execute_checkout_page(driver):
+    print("Executing Checkout Page logic...")
+    checkout_page = CheckoutPage(driver)
+    checkout_page.click_checkout_driver()
+    checkout_page.click_complete_checkout()
+    print("Checkout Page Test Passed!")
+
 def test_pakyard_full_flow():
     driver = get_driver()
     try:
@@ -195,6 +204,7 @@ def test_pakyard_full_flow():
         execute_checkin_page(driver)
         execute_login_page(driver)
         execute_trailer_processing_page(driver)
+        execute_checkout_page(driver)
         print("All tests completed successfully!")
 
     except Exception as e:
