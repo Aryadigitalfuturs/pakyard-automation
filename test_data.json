@@ -2,15 +2,17 @@
   "appointments": [
     {
       "customer": "TES",
-      "time": "03:00",
+      "time": "16:00",
       "carrier": "UPS Express",
-      "receipt_id": "POQECNPZ",
+      "receipt_id": "POSM26NE4",
+      "shipment_id": "SNTEST156",
       "order_type": "FTL",
       "contact_name": "Arya",
       "contact_number": "(345) 656-6667",
       "email": "arya.ku@digitalfuturus.com"
     }
   ],
+  "dock_door": "DA22",
   "checkin": {
     "driver_name": "Remya",
     "driver_cell": "469-742-3508",
@@ -23,6 +25,11 @@
   },
   "inspection": {
     "inspector_name": "Anupama",
-    "loader_name": "Arya"
+    "loader_name": "Arya",
+    "pallet_quantity": "12",
+    "line_count": "20",
+    "seal_number": "sl000001",
+    "seal_image" : "C:\\Users\\Admin\\Python\\SEALIMAGE.jpg"
+
   }
 }

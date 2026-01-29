@@ -15,7 +15,7 @@ class CheckInPage:
 
     def enter_code(self, code):
         # Target the specific display container using the inner span's unique color class
-        xpath = "//div[.//span[contains(@class, 'text-[#2562a8]')]]"
+        xpath = "/html/body/div[2]/div/div/div[3]/div[2]/div/div[1]"
         container = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
         container.click()
         time.sleep(1)

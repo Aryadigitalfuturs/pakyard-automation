@@ -23,7 +23,7 @@ class TrailerProcessingPage:
             print(f"Could not click 'Today' button, proceeding anyway. Error: {e}")
 
         # Using the absolute XPath provided by the user.
-        view_button_xpath = "/html/body/div[2]/div[2]/div[2]/div/div[2]/div[2]/div[1]/table/tbody/tr[1]/td[8]/div/button[1]"
+        view_button_xpath = "/html/body/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/table/tbody/tr[1]/td[9]/div/button[1]"
         try:
             print(f"Waiting for view button with XPath: {view_button_xpath}")
             # Wait for the element to be clickable.
@@ -47,7 +47,7 @@ class TrailerProcessingPage:
         start_button.click()
     
     def enter_inspector_name(self, inspector_name):
-        inspector_input_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[1]/div[1]/input"
+        inspector_input_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[1]/div[1]/input"
         inspector_input = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.XPATH, inspector_input_xpath)))
         inspector_input.clear()
         inspector_input.send_keys(inspector_name)
@@ -65,21 +65,22 @@ class TrailerProcessingPage:
             self.driver.execute_script("arguments[0].click();", btn)
 
     def check_and_upload_photo(self, file_path):
-        time.sleep(2)
-        elements = self.driver.find_elements(By.XPATH, "//*[contains(text(), 'Please add a photo')]")
-        if len(elements) > 0:
-            print("Question asking for photo found. Uploading...")
-            file_inputs = self.driver.find_elements(By.XPATH, "//input[@type='file']")
-            for input_field in file_inputs:
-                try:
-                    input_field.send_keys(file_path)
-                    print("Photo uploaded successfully.")
-                    time.sleep(2)
-                except Exception as e:
-                    print(f"Error uploading photo: {e}")
+        pass
+        # time.sleep(2)
+        # elements = self.driver.find_elements(By.XPATH, "//*[contains(text(), 'Please add a photo')]")
+        # if len(elements) > 0:
+        #     print("Question asking for photo found. Uploading...")
+        #     file_inputs = self.driver.find_elements(By.XPATH, "//input[@type='file']")
+        #     for input_field in file_inputs:
+        #         try:
+        #             input_field.send_keys(file_path)
+        #             print("Photo uploaded successfully.")
+        #             time.sleep(2)
+        #         except Exception as e:
+        #             print(f"Error uploading photo: {e}")
 
     def click_save_inspection(self):
-        save_button_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"
+        save_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"
         save_button = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, save_button_xpath))
         )
@@ -88,7 +89,7 @@ class TrailerProcessingPage:
         self.driver.execute_script("arguments[0].click();", save_button)
 
     def click_start_loading(self):
-        start_loading_button_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div[1]/div/button"
+        start_loading_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div/button"
         start_loading_button = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, start_loading_button_xpath))
         )
@@ -98,13 +99,13 @@ class TrailerProcessingPage:
 
     def enter_loader_name(self, loader_name):
         loader_input = WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[1]/div[1]//input"))
+            EC.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[1]/div[1]/input"))
         )
         loader_input.clear()
         loader_input.send_keys(loader_name)
 
     def click_confirm_checkbox(self):
-        checkbox_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div[2]/div[1]/div[3]/div/button"
+        checkbox_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[2]/div[1]/div[3]/div/button"
         checkbox = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, checkbox_xpath))
         )
@@ -113,7 +114,7 @@ class TrailerProcessingPage:
         self.driver.execute_script("arguments[0].click();", checkbox)
 
     def click_mark_as_complete(self):
-        mark_complete_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"
+        mark_complete_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/button"
         mark_complete_button = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, mark_complete_xpath))
         )

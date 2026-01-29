@@ -5,10 +5,11 @@ from selenium.webdriver.support import expected_conditions as EC
 class LoginPage:
     def __init__(self, driver):
         self.driver = driver
-        self.sso_button = (By.XPATH, "//button[contains(., 'SSO Login with Microsoft')] | //a[contains(., 'SSO Login with Microsoft')]")
+        self.sso_button = (By.XPATH, "/html/body/main/div/div[2]/div[2]/div[2]/form/button")
 
     def load(self):
         self.driver.get("https://dev.pakyard.drinkpak.com/")
 
     def click_sso(self):
-        WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.sso_button)).click()
+        element = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.sso_button))
+        self.driver.execute_script("arguments[0].click();", element)

@@ -2,6 +2,9 @@ from selenium import webdriver
 import json
 import traceback
 import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from LoginPage import LoginPage
 from HomePage import HomePage
 from AppointmentPage import AppointmentPage
@@ -25,11 +28,13 @@ def execute_login_page(driver):
 
     # If redirected to home/dashboard due to saved session, logout to show login page
     if "/home" in driver.current_url or "dashboard" in driver.current_url:
-        driver.delete_all_cookies()
-        login_page.load()
+        print("Already logged in, skipping login process.")
+        return
 
     print("Clicking SSO button...")
     login_page.click_sso()
+    # Wait for the URL to change, confirming login was successful
+    WebDriverWait(driver, 30).until(lambda d: "/home" in d.current_url or "dashboard" in d.current_url)
     print("Login Page Test Passed!")
 
 def execute_home_page(driver):

@@ -8,14 +8,13 @@ import time
 class AppointmentPage:
     def __init__(self, driver):
         self.driver = driver
-        self.customer_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[1]/div[2]/div/div[1]/div[1]/button")
+        self.customer_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div[1]/div[2]/div/div[1]/div[1]/button")
         self.plus_icon = (By.XPATH, "(//button[.//svg][not(ancestor::tbody)])[last()]")
+        self.active_time_slot = None
 
     def is_loaded(self):
         # Verify that the URL contains 'appointment' or check for a specific element
         return WebDriverWait(self.driver, 20).until(EC.url_contains("appointment"))
-    time.sleep(2)
-    
 
     def select_customer(self, customer_name):
         wait = WebDriverWait(self.driver, 20)
@@ -29,6 +28,7 @@ class AppointmentPage:
         self.driver.execute_script("arguments[0].click();", option_element)
 
     def select_time_slot(self, time_slot):
+        self.active_time_slot = time_slot
         # Find the row containing the time text.
         # Based on the specific XPath provided previously, the '+' icon is in the 3rd column (td[3]).
         # Handle potential time format mismatch (e.g. 12.00 vs 12:00)
@@ -50,8 +50,14 @@ class AppointmentPage:
         self.driver.execute_script("arguments[0].click();", element)
 
     def select_carrier(self, carrier_name):
-        # Use the specific XPath provided for the carrier dropdown button
-        carrier_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[3]/button")
+        if self.active_time_slot:
+            time_slot = self.active_time_slot
+            time_slot_colon = time_slot.replace('.', ':')
+            base_xpath = f"//tr[td[1][contains(normalize-space(.), '{time_slot}') or contains(normalize-space(.), '{time_slot_colon}')]]/td[3]"
+        else:
+            base_xpath = "//table/tbody/tr/td[3]"
+
+        carrier_dropdown = (By.XPATH, f"{base_xpath}//form/div[1]/div[3]/button")
         wait = WebDriverWait(self.driver, 20)
         element = wait.until(EC.element_to_be_clickable(carrier_dropdown))
         self.driver.execute_script("arguments[0].click();", element)
@@ -97,14 +103,27 @@ class AppointmentPage:
         element.send_keys(email)
 
     def enter_receipt_id(self, receipt_id):
-        receipt_input = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[4]/input")
+        if self.active_time_slot:
+            time_slot = self.active_time_slot
+            time_slot_colon = time_slot.replace('.', ':')
+            base_xpath = f"//tr[td[1][contains(normalize-space(.), '{time_slot}') or contains(normalize-space(.), '{time_slot_colon}')]]/td[3]"
+        else:
+            base_xpath = "//table/tbody/tr/td[3]"
+
+        receipt_input = (By.XPATH, f"{base_xpath}//form/div[1]/div[4]/input")
         element = WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located(receipt_input))
         element.clear()
         element.send_keys(receipt_id)
 
     def select_order_type(self, order_type):
-        # Use the specific XPath provided for the order type dropdown button
-        order_type_dropdown = (By.XPATH, "/html/body/div[2]/div[2]/div[2]/div/div/div[3]/div[2]/div[1]/div/table/tbody/tr[4]/td[3]/div/div/div[2]/div[2]/form/div[1]/div[5]/button")
+        if self.active_time_slot:
+            time_slot = self.active_time_slot
+            time_slot_colon = time_slot.replace('.', ':')
+            base_xpath = f"//tr[td[1][contains(normalize-space(.), '{time_slot}') or contains(normalize-space(.), '{time_slot_colon}')]]/td[3]"
+        else:
+            base_xpath = "//table/tbody/tr/td[3]"
+
+        order_type_dropdown = (By.XPATH, f"{base_xpath}//form/div[1]/div[5]/button")
         wait = WebDriverWait(self.driver, 20)
         element = wait.until(EC.element_to_be_clickable(order_type_dropdown))
         self.driver.execute_script("arguments[0].click();", element)
