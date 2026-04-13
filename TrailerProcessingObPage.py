@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 import time
 
 class TrailerProcessingObPage:
@@ -241,17 +241,18 @@ class TrailerProcessingObPage:
 
     def click_start_seal_verification(self):
         xpath_options = [
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button",
             "//button[contains(., 'Start Seal Verification')]",
             "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div/div[1]/div/button"
         ]
         for xpath in xpath_options:
             try:
-                start_seal_btn = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                start_seal_btn = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
                 self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", start_seal_btn)
                 time.sleep(1)
                 self.driver.execute_script("arguments[0].click();", start_seal_btn)
                 return
-            except TimeoutException:
+            except (TimeoutException, StaleElementReferenceException):
                 continue
         raise Exception("Could not find 'Start Seal Verification' button")
 
@@ -274,8 +275,31 @@ class TrailerProcessingObPage:
         self.driver.execute_script("arguments[0].click();", complete_btn)
 
     def click_trailer_processing_nav(self):
-        nav_xpath = "/html/body/div[2]/div[1]/div[2]/a[9]"
+        # Use a robust locator to navigate back to processing list
         nav_button = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, nav_xpath))
+            EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/trailer-processing')]"))
         )
         nav_button.click()
+
+    def click_start_bol_creation(self):
+        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button"
+        btn = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        self.driver.execute_script("arguments[0].click();", btn)
+
+    def click_preview_bol(self):
+        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div/button"
+        # Wait until the preview button is enabled (clickable)
+        btn = WebDriverWait(self.driver, 120).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        self.driver.execute_script("arguments[0].click();", btn)
+
+    def scroll_to_bottom(self):
+        print("Scrolling to the bottom of the page...")
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+    def wait_for_save_enabled(self):
+        print("Waiting for Save button to be enabled...")
+        # Using a robust locator for the Save button that waits until it is no longer disabled
+        save_xpath = "//button[contains(., 'Save')]"
+        WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, save_xpath)))
+        print("Save button is now enabled.")

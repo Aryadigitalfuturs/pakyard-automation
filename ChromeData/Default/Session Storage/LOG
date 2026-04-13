@@ -1,6 +1,6 @@
-2026/04/10-12:02:06.296 6d24 Reusing MANIFEST C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/MANIFEST-000001
-2026/04/10-12:02:06.296 6d24 Recovering log #74
-2026/04/10-12:02:06.298 6d24 Reusing old log C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/000074.log 
-2026/04/10-12:03:08.475 4450 Level-0 table #78: started
-2026/04/10-12:03:08.481 4450 Level-0 table #78: 13879 bytes OK
-2026/04/10-12:03:08.483 4450 Delete type=0 #74
+2026/04/13-07:18:16.661 22b4 Reusing MANIFEST C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/MANIFEST-000001
+2026/04/13-07:18:16.662 22b4 Recovering log #87
+2026/04/13-07:18:16.665 22b4 Reusing old log C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/000087.log 
+2026/04/13-07:21:18.271 4cc4 Level-0 table #91: started
+2026/04/13-07:21:18.280 4cc4 Level-0 table #91: 15306 bytes OK
+2026/04/13-07:21:18.282 4cc4 Delete type=0 #87

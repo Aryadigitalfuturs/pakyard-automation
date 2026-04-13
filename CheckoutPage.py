@@ -10,9 +10,9 @@ class CheckoutPage:
 
     def click_checkout_driver(self):
         # XPath provided for the checkout driver button
-        checkout_button_xpath = "/html/body/div[2]/div[2]/div/div/div[2]/div[1]/button[2]"
-        scan_driver_xpath = "/html/body/div[5]/div/div/button"
-        allow_camera_xpath = "/html/body/div[5]/div/div/div/button"
+        checkout_button_xpath = "//button[contains(., 'Checkout Driver')] | /html/body/div[2]/div[2]/div/div/div[2]/div[1]/button[2]"
+        scan_driver_xpath = "//button[contains(., 'Scan Driver')] | /html/body/div[5]/div/div/button"
+        allow_camera_xpath = "//button[contains(., 'Allow')] | /html/body/div[5]/div/div/div/button"
         try:
             print(f"Waiting for Checkout Driver button with XPath: {checkout_button_xpath}")
             checkout_button = WebDriverWait(self.driver, 20).until(

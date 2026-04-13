@@ -1,13 +1,14 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 class ManualCheckInPage:
     def __init__(self, driver):
         self.driver = driver
-        self.driver_name_input = (By.XPATH, "//form//input[contains(@placeholder, 'Name')] | //form//div[1]//input")
-        self.trailer_number_input = (By.XPATH, "//form//input[contains(@placeholder, 'Trailer')] | //form//div[3]//input")
+        self.driver_name_input = (By.XPATH, "//input[contains(@placeholder, 'Name')] | //form//div[1]//input")
+        self.trailer_number_input = (By.XPATH, "//input[contains(@placeholder, 'Trailer')] | //form//div[3]//input")
         self.trailer_type_dropdown = (By.XPATH, "//form//div[7]//button | /html/body/div[5]/form/div[1]/div[7]/button")
         self.carrier_dropdown = (By.XPATH, "//form//div[8]//button | /html/body/div[5]/form/div[1]/div[8]/button")
         self.ontime_comment_dropdown = (By.XPATH, "//form//div[9]//button | /html/body/div[5]/form/div[1]/div[9]/button")
@@ -32,21 +33,41 @@ class ManualCheckInPage:
             except:
                 raise Exception(f"Row for Shipment ID {shipment_id} not found even after refresh.")
 
-        # Try multiple strategies to find the button
+        # Scroll row into view and allow buttons to render
+        row_element = self.driver.find_element(By.XPATH, row_xpath)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", row_element)
+        time.sleep(2)
+
+        # Try multiple strategies to find the trailer/check-in icon button
         strategies = [
-            f"//tr[contains(., '{shipment_id}')]//span[2]/button",
+            f"//tr[contains(., '{shipment_id}')]/td[2]/div/div/div[2]/span[2]/button",
+            f"//tr[contains(., '{shipment_id}')]/td[2]/div/div[2]/div[2]/span[2]/button",
+            f"//tr[contains(., '{shipment_id}')]//button[.//svg]", # Button containing an SVG icon
+            f"//tr[contains(., '{shipment_id}')]//span[contains(@class, 'button')]//button",
+            f"//tr[contains(., '{shipment_id}')]//td[2]//button[last()]",
+            f"//tr[contains(., '{shipment_id}')]//button[contains(@class, 'checkin')]",
             f"(//tr[contains(., '{shipment_id}')]//button)[2]",
-            f"(//tr[contains(., '{shipment_id}')]//button)[last()]"
+            f"(//tr[contains(., '{shipment_id}')]//button)[last()]",
+            f"//tr[contains(., '{shipment_id}')]//button" # Fallback: any button in that row
         ]
 
         for xpath in strategies:
             try:
-                element = WebDriverWait(self.driver, 5).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element)
-                time.sleep(1)
-                self.driver.execute_script("arguments[0].click();", element)
+                element = WebDriverWait(self.driver, 3).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                
+                # Use ActionChains to move to element and click for better reliability
+                try:
+                    ActionChains(self.driver).move_to_element(element).click().perform()
+                except:
+                    try:
+                        element.click()
+                    except:
+                        self.driver.execute_script("arguments[0].click();", element)
+                time.sleep(2)
+                
+                # Verify form or page loaded by checking for the driver name input field
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.driver_name_input))
                 print(f"Clicked Trailer icon for Shipment ID: {shipment_id}.")
-                time.sleep(5)
                 return
             except:
                 continue
@@ -56,18 +77,24 @@ class ManualCheckInPage:
     def enter_driver_name(self, driver_name):
         print(f"Entering Driver Name: {driver_name}")
         element = WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located(self.driver_name_input)
+            EC.element_to_be_clickable(self.driver_name_input)
         )
-        element.clear()
+        try:
+            element.clear()
+        except:
+            self.driver.execute_script("arguments[0].value = '';", element)
         element.send_keys(driver_name)
         time.sleep(1)
 
     def enter_trailer_number(self, trailer_number):
         print(f"Entering Trailer Number: {trailer_number}")
         element = WebDriverWait(self.driver, 20).until(
-            EC.visibility_of_element_located(self.trailer_number_input)
+            EC.element_to_be_clickable(self.trailer_number_input)
         )
-        element.clear()
+        try:
+            element.clear()
+        except:
+            self.driver.execute_script("arguments[0].value = '';", element)
         element.send_keys(trailer_number)
         time.sleep(1)
 

@@ -274,12 +274,28 @@ def execute_trailer_processing_ob_page(driver):
     trailer_page.click_final_mark_complete()
     time.sleep(2)
 
-    print("Navigating back to Trailer Processing list...")
-    trailer_page.click_trailer_processing_nav()
-    time.sleep(5)
+    print("Clicking Start BOL Creation...")
+    trailer_page.click_start_bol_creation()
+
+    print("Waiting for BOL generation and scrolling down...")
+    # BOL generation is usually complete when the Save button becomes enabled
+    trailer_page.scroll_to_bottom()
+    trailer_page.wait_for_save_enabled()
+    time.sleep(2)
+
+    print("Waiting for BOL Preview to be enabled and clicking...")
+    trailer_page.click_preview_bol()
+    time.sleep(5) # Allow preview to load
+
+    # print("Navigating back to Trailer Processing list...")
+    # trailer_page.click_trailer_processing_nav()
+    # time.sleep(5)
 
 def execute_checkout_page(driver):
     print("Executing Checkout Page logic...")
+    # Directly navigate to the processing list to ensure we are on the correct page for checkout
+    driver.get("https://dev.pakyard.drinkpak.com/trailer-processing")
+    time.sleep(3)
     checkout_page = CheckoutPage(driver)
     checkout_page.click_checkout_driver()
     checkout_page.click_complete_checkout()
