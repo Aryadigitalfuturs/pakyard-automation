@@ -32,7 +32,11 @@ def execute_login_page(driver):
         return
 
     print("Clicking SSO button...")
-    login_page.click_sso()
+    sso_button_xpath = "/html/body/main/div/div[2]/div[2]/div[2]/form/button"
+    sso_button = WebDriverWait(driver, 30).until(
+        EC.element_to_be_clickable((By.XPATH, sso_button_xpath))
+    )
+    driver.execute_script("arguments[0].click();", sso_button)
     # Wait for the URL to change, confirming login was successful
     WebDriverWait(driver, 30).until(lambda d: "/home" in d.current_url or "dashboard" in d.current_url)
     print("Login Page Test Passed!")

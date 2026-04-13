@@ -22,11 +22,8 @@ class TrailerProcessingObPage:
         except Exception as e:
             print(f"Could not click 'Today' button, proceeding anyway. Error: {e}")
 
-        if dock_door:
-            self.assign_dock_door(dock_door)
-
         # Using the absolute XPath provided by the user.
-        view_button_xpath = "/html/body/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/table/tbody/tr[1]/td[9]/div/button[1]"
+        view_button_xpath = "/html/body/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/table/tbody/tr[1]/td[12]/div/button[1]"
         try:
             print(f"Waiting for view button with XPath: {view_button_xpath}")
             # Wait for the element to be clickable.
@@ -73,7 +70,8 @@ class TrailerProcessingObPage:
         time.sleep(2)
 
     def click_start_inspection(self):
-        start_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Start Inspection')]")))
+        start_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div/div[2]/button[1]"
+        start_button = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, start_button_xpath)))
         start_button.click()
     
     def enter_inspector_name(self, inspector_name):
@@ -119,8 +117,7 @@ class TrailerProcessingObPage:
         self.driver.execute_script("arguments[0].click();", save_button)
 
     def click_start_loading(self):
-        start_loading_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div/button"
-        start_loading_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/button[2]"
+        start_loading_button_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/button"
         start_loading_button = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, start_loading_button_xpath))
         )
@@ -259,7 +256,7 @@ class TrailerProcessingObPage:
         raise Exception("Could not find 'Start Seal Verification' button")
 
     def click_final_yes(self):
-        yes_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div/div[2]/div[2]/div/div/div[1]/button"
+        yes_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[2]/div/div/div[1]/button"
         yes_btn = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, yes_xpath))
         )
@@ -268,7 +265,7 @@ class TrailerProcessingObPage:
         self.driver.execute_script("arguments[0].click();", yes_btn)
 
     def click_final_mark_complete(self):
-        complete_xpath = "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div/div[2]/div[3]/button"
+        complete_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[3]/button"
         complete_btn = WebDriverWait(self.driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, complete_xpath))
         )
