@@ -127,36 +127,36 @@ class TrailerProcessingObPage:
         
         # Click Skip verification
         try:
-            skip_verification_xpath = "/html/body/div[5]/div[3]/button[2]"
+            skip_verification_xpath = "//button[contains(., 'Skip verification')] | //button[contains(., 'Skip')] | /html/body/div[5]/div[3]/button[2]"
             skip_verification_btn = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, skip_verification_xpath))
             )
             self.driver.execute_script("arguments[0].click();", skip_verification_btn)
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
-            print(f"Skip verification button not found: {e}")
+            print(f"Skip verification button not found or not needed: {e}")
 
         # Click Skip and continue
         try:
-            skip_continue_xpath = "/html/body/div[7]/div[4]/button[2]"
+            skip_continue_xpath = "//button[contains(., 'Skip and continue')] | /html/body/div[7]/div[4]/button[2]"
             skip_continue_btn = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, skip_continue_xpath))
             )
             self.driver.execute_script("arguments[0].click();", skip_continue_btn)
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
-            print(f"Skip and continue button not found: {e}")
+            print(f"Skip and continue button not found or not needed: {e}")
 
         # Click Confirm Start
         try:
-            confirm_start_xpath = "/html/body/div[5]/div[3]/button[2]"
+            confirm_start_xpath = "//button[contains(., 'Confirm Start')] | //button[contains(., 'Confirm')] | /html/body/div[5]/div[3]/button[2]"
             confirm_start_btn = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, confirm_start_xpath))
             )
             self.driver.execute_script("arguments[0].click();", confirm_start_btn)
-            time.sleep(1)
+            time.sleep(2)
         except Exception as e:
-            print(f"Confirm Start button not found: {e}")
+            print(f"Confirm Start button not found or not needed: {e}")
 
     def enter_loader_name(self, loader_name):
         loader_input = WebDriverWait(self.driver, 20).until(
@@ -240,39 +240,67 @@ class TrailerProcessingObPage:
         self.driver.execute_script("arguments[0].click();", save_btn)
 
     def click_start_seal_verification(self):
+        time.sleep(2) # Allow modal to close and main page to settle
         xpath_options = [
-            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button",
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button", 
             "//button[contains(., 'Start Seal Verification')]",
-            "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div/div[1]/div/button"
+            "/html/body/div[2]/div[2]/div[2]/div/div/div[2]/div[2]/form/div[3]/div/div[1]/div/button",
+            "//button[contains(text(), 'Start Seal')]"
         ]
         for xpath in xpath_options:
             try:
-                start_seal_btn = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                # Use visibility + clickability check
+                start_seal_btn = WebDriverWait(self.driver, 15).until(
+                    EC.element_to_be_clickable((By.XPATH, xpath))
+                )
                 self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", start_seal_btn)
-                time.sleep(1)
-                self.driver.execute_script("arguments[0].click();", start_seal_btn)
+                time.sleep(2) # Give it a moment to stabilize
+                try:
+                    start_seal_btn.click()
+                except:
+                    self.driver.execute_script("arguments[0].click();", start_seal_btn)
+                print("Clicked Start Seal Verification.")
                 return
             except (TimeoutException, StaleElementReferenceException):
                 continue
         raise Exception("Could not find 'Start Seal Verification' button")
 
     def click_final_yes(self):
-        yes_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[2]/div/div/div[1]/button"
-        yes_btn = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, yes_xpath))
-        )
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", yes_btn)
-        time.sleep(1)
-        self.driver.execute_script("arguments[0].click();", yes_btn)
+        print("Clicking final 'Yes' for seal verification...")
+        xpath_options = [
+            "//button[normalize-space()='Yes']",
+            "//div[contains(@class, 'seal-verification')]//button[contains(., 'Yes')]",
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[2]/div/div/div[1]/button"
+        ]
+        for xpath in xpath_options:
+            try:
+                yes_btn = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", yes_btn)
+                time.sleep(1)
+                # Fallback to JS click if normal click fails
+                self.driver.execute_script("arguments[0].click();", yes_btn)
+                return
+            except:
+                continue
+        raise Exception("Could not find final 'Yes' button for seal verification.")
 
     def click_final_mark_complete(self):
-        complete_xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[3]/button"
-        complete_btn = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((By.XPATH, complete_xpath))
-        )
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", complete_btn)
-        time.sleep(1)
-        self.driver.execute_script("arguments[0].click();", complete_btn)
+        print("Clicking final 'Mark as Complete' button...")
+        xpath_options = [
+            "//button[contains(., 'Mark as Complete')]",
+            "//button[contains(., 'Complete')]",
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div[3]/button"
+        ]
+        for xpath in xpath_options:
+            try:
+                complete_btn = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath)))
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", complete_btn)
+                time.sleep(1)
+                self.driver.execute_script("arguments[0].click();", complete_btn)
+                return
+            except:
+                continue
+        raise Exception("Could not find final 'Mark as Complete' button.")
 
     def click_trailer_processing_nav(self):
         # Use a robust locator to navigate back to processing list
@@ -282,15 +310,84 @@ class TrailerProcessingObPage:
         nav_button.click()
 
     def click_start_bol_creation(self):
-        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button"
-        btn = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        self.driver.execute_script("arguments[0].click();", btn)
+        print("Clicking 'Start BOL Creation' button...")
+        xpath_options = [
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button[2]",
+            "//button[contains(., 'Start BOL')]",
+        ]
+        for xpath in xpath_options:
+            try:
+                btn = WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                self.driver.execute_script("arguments[0].click();", btn)
+                return
+            except:
+                continue
+        raise Exception("Could not find 'Start BOL Creation' button.")
+
+    def click_complete_checkout_main(self):
+        print("Clicking 'Complete Check Out' button...")
+        xpath_options = [
+            "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[1]/div/button[2]",
+            "//button[contains(., 'Complete Check Out')]",
+            "//button[contains(., 'Complete Checkout')]",
+            "//form//button[contains(., 'Complete')]"
+        ]
+        for xpath in xpath_options:
+            try:
+                btn = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+                time.sleep(1)
+                try:
+                    btn.click()
+                except:
+                    self.driver.execute_script("arguments[0].click();", btn)
+                print("Clicked 'Complete Check Out' successfully.")
+                return
+            except:
+                continue
+        raise Exception("Could not find 'Complete Check Out' button.")
+
+    def click_continue_modal_button(self):
+        print("Clicking 'Continue' button on modal...")
+        xpath = "/html/body/div[5]/div[3]/button[2]"
+        try:
+            btn = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            self.driver.execute_script("arguments[0].click();", btn)
+            print("Clicked 'Continue' successfully.")
+        except Exception as e:
+            print(f"Error clicking Continue button: {e}")
+            raise
 
     def click_preview_bol(self):
-        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div/button"
-        # Wait until the preview button is enabled (clickable)
-        btn = WebDriverWait(self.driver, 120).until(EC.element_to_be_clickable((By.XPATH, xpath)))
-        self.driver.execute_script("arguments[0].click();", btn)
+        print("Attempting to click Preview BOL button...")
+        # Prioritizing the specific XPath provided by the user
+        locators = [
+            (By.XPATH, "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[1]/div[2]/div/button"),
+            (By.XPATH, "//button[contains(normalize-space(), 'Preview BOL')]"),
+            (By.XPATH, "//button[contains(., 'Preview')]")
+        ]
+
+        for attempt in range(3):
+            for by, value in locators:
+                try:
+                    btn = WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((by, value)))
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+                    time.sleep(1)
+                    
+                    # Try regular click first, then fallback to JS click
+                    try:
+                        btn.click()
+                    except:
+                        self.driver.execute_script("arguments[0].click();", btn)
+                    
+                    print("Preview BOL button clicked successfully.")
+                    return
+                except (TimeoutException, StaleElementReferenceException):
+                    continue
+            print(f"Retrying Preview BOL click... (Attempt {attempt + 1}/3)")
+            time.sleep(2)
+            
+        raise Exception("Failed to click Preview BOL button after multiple attempts and locators.")
 
     def scroll_to_bottom(self):
         print("Scrolling to the bottom of the page...")
@@ -299,7 +396,49 @@ class TrailerProcessingObPage:
 
     def wait_for_save_enabled(self):
         print("Waiting for Save button to be enabled...")
-        # Using a robust locator for the Save button that waits until it is no longer disabled
         save_xpath = "//button[contains(., 'Save')]"
-        WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, save_xpath)))
-        print("Save button is now enabled.")
+        try:
+            WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, save_xpath)))
+            print("Save button is now enabled.")
+            return True
+        except TimeoutException:
+            print("Save button did not become clickable within 60s. Checking if Preview is already available...")
+            if self.driver.find_elements(By.XPATH, "//button[contains(., 'Preview BOL')]"):
+                print("Preview BOL button detected, skipping Save wait.")
+                return False
+            else:
+                raise
+
+    def click_save_bol(self):
+        save_xpath = "//button[contains(., 'Save')]"
+        btn = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, save_xpath)))
+        self.driver.execute_script("arguments[0].click();", btn)
+        # Verification for BOL (Handles both PAKAPPs and standard success messages)
+        WebDriverWait(self.driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'BOL Generated Successfully') or contains(text(), 'BOL Submitted Successfully')]")))
+
+    def click_go_to_checkout(self):
+        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div/div[2]/div/div/button"
+        print("Waiting for 'Go to Checkout Page' button...")
+        btn = WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+        time.sleep(1)
+        self.driver.execute_script("arguments[0].click();", btn)
+        print("Clicked 'Go to Checkout Page' successfully.")
+
+    def click_start_checkout_final(self):
+        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div/button"
+        print("Waiting for 'Start CheckOut' button...")
+        btn = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+        time.sleep(1)
+        self.driver.execute_script("arguments[0].click();", btn)
+        print("Clicked 'Start CheckOut' successfully.")
+
+    def click_complete_checkout_final(self):
+        xpath = "/html/body/div[2]/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div/div/button"
+        print("Waiting for 'Complete Checkout' button...")
+        btn = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable((By.XPATH, xpath)))
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+        time.sleep(1)
+        self.driver.execute_script("arguments[0].click();", btn)
+        print("Clicked 'Complete Checkout' successfully.")

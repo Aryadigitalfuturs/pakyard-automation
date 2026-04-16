@@ -1,6 +1,15 @@
-2026/04/13-07:18:16.661 22b4 Reusing MANIFEST C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/MANIFEST-000001
-2026/04/13-07:18:16.662 22b4 Recovering log #87
-2026/04/13-07:18:16.665 22b4 Reusing old log C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/000087.log 
-2026/04/13-07:21:18.271 4cc4 Level-0 table #91: started
-2026/04/13-07:21:18.280 4cc4 Level-0 table #91: 15306 bytes OK
-2026/04/13-07:21:18.282 4cc4 Delete type=0 #87
+2026/04/16-07:21:09.513 9bb0 Reusing MANIFEST C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/MANIFEST-000001
+2026/04/16-07:21:09.515 9bb0 Recovering log #129
+2026/04/16-07:21:09.518 9bb0 Reusing old log C:\Users\Admin\Python\PAKYARD\ChromeData\Default\Session Storage/000129.log 
+2026/04/16-07:22:11.315 9978 Level-0 table #133: started
+2026/04/16-07:22:11.327 9978 Level-0 table #133: 12392 bytes OK
+2026/04/16-07:22:11.331 9978 Delete type=0 #129
+2026/04/16-07:22:11.333 9978 Compacting 4@0 + 1@1 files
+2026/04/16-07:22:11.349 9978 Generated table #134@0: 2768 keys, 45609 bytes
+2026/04/16-07:22:11.350 9978 Compacted 4@0 + 1@1 files => 45609 bytes
+2026/04/16-07:22:11.351 9978 compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/04/16-07:22:11.353 9978 Delete type=2 #121
+2026/04/16-07:22:11.354 9978 Delete type=2 #124
+2026/04/16-07:22:11.354 9978 Delete type=2 #126
+2026/04/16-07:22:11.355 9978 Delete type=2 #130
+2026/04/16-07:22:11.355 9978 Delete type=2 #133
